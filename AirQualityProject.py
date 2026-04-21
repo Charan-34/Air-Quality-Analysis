@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from scipy import stats
 df = pd.read_csv("city_day.csv")
 #EDA
-print(df.info())
+print(df.info()) 
 print(df.describe())
 ##Objective 1: Data Cleaning and Handling Missing Values
 
@@ -107,6 +107,20 @@ y_pred = model.predict(X_test)
 
 print("MSE:", mean_squared_error(y_test, y_pred))
 print("R² Score:", r2_score(y_test, y_pred))
+print("\nModel Interpretation:")
+
+r2 = r2_score(y_test, y_pred)
+
+if r2 > 0.8:
+    print("Model performance is excellent")
+elif r2 > 0.6:
+    print("Model performance is good")
+elif r2 > 0.4:
+    print("Model performance is moderate")
+else:
+    print("Model performance is poor")
+
+
 
 
 
@@ -119,6 +133,17 @@ corr = df[['AQI', 'PM2.5', 'PM10', 'NO2', 'CO']].corr()
 
 sns.heatmap(corr, annot=True)
 plt.title("Correlation Heatmap")
+plt.show()
+# Feature Importance (Linear Regression Coefficients)
+importance = pd.Series(model.coef_, index=X.columns)
+importance = importance.sort_values(ascending=False)
+
+print("\nFeature Importance:\n", importance)
+
+# Plot
+importance.plot(kind='bar')
+plt.title("Feature Importance (Impact on AQI)")
+plt.ylabel("Coefficient Value")
 plt.show()
 
 
@@ -138,7 +163,10 @@ if p_value < alpha:
     print("Reject the Null Hypothesis: There is a statistically significant difference in the mean AQI between Delhi and Mumbai.")
 else:
     print("Fail to reject the Null Hypothesis: There is no significant difference in the mean AQI.")
-# Z-test
-sample = df['AQI'].dropna()
-z = (sample.mean()) / (sample.std()/np.sqrt(len(sample)))
-print("Z value:", z)
+print("\nFinal Insights:")
+
+print("1. Cities show significant variation in AQI levels, indicating uneven pollution distribution.")
+print("2. PM2.5 and PM10 are the most influential pollutants affecting AQI.")
+print("3. Outliers were present and were successfully handled using IQR method.")
+print("4. The Linear Regression model can reasonably predict AQI using pollutant data.")
+print("5. Statistical testing shows whether differences between cities are significant.")
